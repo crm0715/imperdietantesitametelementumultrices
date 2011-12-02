@@ -2,7 +2,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -Wall -Wno-unused-label -MMD	# compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS =  driver.o bank.o truck.o # add object files here
+OBJECTS =  driver.o bank.o truck.o student.o # add object files here
 EXEC = soda # executable name
 
 DEPENDS = ${OBJECT:.o=.d}			# substitute ".o" with ".d"

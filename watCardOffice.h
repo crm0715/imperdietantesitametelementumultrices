@@ -4,6 +4,7 @@
 #include <uC++.h>
 #include "watCard.h"
 #include "bank.h"
+#include "printer.h"
 
 _Task WATCardOffice {
     struct Args {

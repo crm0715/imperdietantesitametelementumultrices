@@ -3,14 +3,15 @@
 
 #include <uC++.h>
 #include "watCard.h"
+#include "printer.h"
+#include "nameServer.h"
 
 _Task VendingMachine {
     void main();
   public:
     enum Flavours { RABBIT, CAT, DOG, BEAR, NUM_OF_FLAVOURS }; 			// flavours of soda (YOU DEFINE)
     enum Status { BUY, STOCK, FUNDS };		// purchase status: successful buy, out of stock, insufficient funds
-    VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
-                    unsigned int maxStockPerFlavour );
+    VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost, unsigned int maxStockPerFlavour );
     Status buy( Flavours flavour, WATCard &card );
     unsigned int *inventory();
     void restocked();

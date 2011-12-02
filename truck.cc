@@ -5,7 +5,7 @@
 
 extern MPRNG prng;
 
-Truck::Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant, unsigned int numVendingMachines, unsigned int maxStockPerFlavour ) : 
+Truck::Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant, unsigned int numVendingMachines, unsigned int maxStockPerFlavour ) :
 	prt(prt), nameServer(nameServer), plant(plant), numVendingMachines(numVendingMachines), maxStockPerFlavour(maxStockPerFlavour) {
 } //Truck
 
@@ -37,13 +37,13 @@ void Truck::main() {
 						inventory[flavour] += available;
 						cargo[flavour] = 0;
 						shipmentTotal -= available;
-					} else { 
+					} else {
 						inventory[flavour] = maxStockPerFlavour;
 						cargo[flavour] -= need;
 						shipmentTotal -= need;
 					} //if
 				}//if
-			} //for 
+			} //for
 			if ( remaining > 0 ) {
 				prt.print ( Printer::Truck, 'U', count, remaining);
 			} else {
@@ -51,7 +51,7 @@ void Truck::main() {
 			}//if
 			vendingMachines[count]->restocked();
 			count++;
-			if ( shipmentTotal = 0 ) break;
+			if ( shipmentTotal == 0 ) break;
 		} //while
 	}//while
 }//main

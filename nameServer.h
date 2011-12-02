@@ -3,6 +3,7 @@
 
 #include <uC++.h>
 #include "printer.h"
+_Task VendingMachine;
 
 _Task NameServer {
     Printer &prt;

@@ -2,6 +2,7 @@
 #define __VENDINGMACHINE_H
 
 #include <uC++.h>
+#include "watCard.h"
 
 _Task VendingMachine {
     void main();

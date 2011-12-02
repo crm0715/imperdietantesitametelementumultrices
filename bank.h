@@ -6,7 +6,7 @@
 
 _Monitor Bank {
 	uCondition lock;
-	std::vector<int> balance;
+	std::vector<unsigned int> balance;
   public:
     Bank( unsigned int numStudents );
     void deposit( unsigned int id, unsigned int amount );

@@ -1,7 +1,7 @@
 #include "bank.h"
 
 Bank::Bank( unsigned int numStudents ) {
-	for ( int i = 0; i < numStudents; i++ ) {
+	for ( unsigned int i = 0; i < numStudents; i++ ) {
 		balance.push_back(0); 					//initialize all student balances as zero
 	}
 } //Bank

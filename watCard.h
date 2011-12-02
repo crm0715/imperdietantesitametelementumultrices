@@ -1,6 +1,9 @@
 #ifndef __WATCARD_H
 #define __WATCARD_H
 
+#include <uC++.h>
+#include <uFuture.h>
+
 class WATCard {
     WATCard( const WATCard & );			// prevent copying
     WATCard &operator=( const WATCard & );

@@ -6,13 +6,20 @@
 #include "printer.h"
 #include "nameServer.h"
 #include "watCardOffice.h"
+#include "vendingMachine.h"
+#include "watCard.h"
 
 _Task Student {
 	Printer &prt;
 	NameServer &nameServer;
 	WATCardOffice &cardOffice;
 	unsigned int id;
-	unsigned int maxPurchases;
+	unsigned int numOfPurchases;
+	VendingMachine::Flavours favouriteFlavour;
+
+	FWATCard watCard;
+	VendingMachine *vendingMachine;
+
     void main();
   public:
     Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id,

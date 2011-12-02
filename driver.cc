@@ -24,7 +24,7 @@ void usage ( char* program ) {
 
 void uMain::main() {
 
-	char* configFile = "sode.config";
+	char* configFile = ( char* ) "sode.config";
 	int seed = ( int ) getpid();
 	struct ConfigParms configParms;
 
@@ -50,7 +50,7 @@ void uMain::main() {
 
 	VendingMachine *vendingMachines[configParms.numVendingMachines];
 	
-	for ( int i = 0; i < configParms.numVendingMachines; i++ ) {
+	for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
 		vendingMachines[i] = new VendingMachine ( printer, nameServer, i, configParms.sodaCost, configParms.maxStockPerFlavour );
 	} //for
 	
@@ -58,16 +58,16 @@ void uMain::main() {
 
 	Student *student[configParms.numStudents];
 
-	for ( int i = 0; i < configParms.numStudents; i++ ) {
+	for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
 		student[i] = new Student ( printer, nameServer, office, i, configParms.maxPurchases );
 	} //for
 
-	for ( int i = 0; i < configParms.numStudents; i++ ) {
+	for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
 		delete student[i];		
 	} //for
 
 	delete bottlingPlant;
-	for ( int i = 0; i < configParms.numVendingMachines; i++ ) {
+	for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
 		delete vendingMachines[i];
 	} //for
 

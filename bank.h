@@ -5,6 +5,7 @@
 #include <vector>
 
 _Monitor Bank {
+	uCondition lock;
 	std::vector<int> balance;
   public:
     Bank( unsigned int numStudents );

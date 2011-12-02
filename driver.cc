@@ -1,4 +1,5 @@
 #include <uC++.h>
+#include <iostream>
 #include <stdlib.h>
 
 #include "config.h"
@@ -47,18 +48,18 @@ void uMain::main() {
 	WATCardOffice office ( printer, bank, configParms.numCouriers );
 	NameServer nameServer ( printer, configParms.numVendingMachines, configParms.numStudents );
 
-	VendingMachine *vendingMachine[configParms.numVendingMachines];
+	VendingMachine *vendingMachines[configParms.numVendingMachines];
 	
 	for ( int i = 0; i < configParms.numVendingMachines; i++ ) {
-		vendingMachine = new VendingMachine ( printer, nameserver, i, configParms.sodaCost, configParms.maxStockPerFlavour );
+		vendingMachines[i] = new VendingMachine ( printer, nameServer, i, configParms.sodaCost, configParms.maxStockPerFlavour );
 	} //for
 	
-    BottlingPlant bottlingPlant ( printer, nameServer, configParms.numVendingMachines, configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour, configParms.timeBetweenShipments );
+    BottlingPlant *bottlingPlant  = new BottlingPlant ( printer, nameServer, configParms.numVendingMachines, configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour, configParms.timeBetweenShipments );
 
 	Student *student[configParms.numStudents];
 
 	for ( int i = 0; i < configParms.numStudents; i++ ) {
-		student ( printer, nameServer, office, i, configParms.maxPurchases );
+		student[i] = new Student ( printer, nameServer, office, i, configParms.maxPurchases );
 	} //for
 
 	for ( int i = 0; i < configParms.numStudents; i++ ) {
@@ -70,9 +71,4 @@ void uMain::main() {
 		delete vendingMachines[i];
 	} //for
 
-	delete office;
-	delete nameServer;
-	delete parent;
-	delete bank;
-	delete printer;	
 } // uMain::main

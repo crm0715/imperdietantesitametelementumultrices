@@ -12,7 +12,7 @@ _Task NameServer {
 
     VendingMachine **machines;
     unsigned int registeredVMIndex; // used as index to indicate how many VMs registered currently
-    int *studentsVMMap; // stores info on which vending machine the student is assigned to
+    unsigned int *studentsVMMap; // stores info on which vending machine the student is assigned to
 
     //Used to pass information to the server
     VendingMachine *previousRegisteredVM;

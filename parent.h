@@ -8,7 +8,7 @@
 _Task Parent {
     Printer &prt;
     Bank &bank;
-    unsigned int numStudnets;
+    unsigned int numStudents;
     unsigned int parentalDelay;
     void main();
   public:

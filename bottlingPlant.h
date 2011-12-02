@@ -9,13 +9,13 @@ _Task Truck;
 
 _Task BottlingPlant {
     Printer &prt;
-    NameServer nameServer;
+    NameServer &nameServer;
     unsigned int numVendingMachines;
     unsigned int maxShippedPerFlavour;
     unsigned int maxStockPerFlavour;
     unsigned int timeBetweenShipments;
     uCondition cargoReadyLock;
-    uCondition cargoReadyFlag;
+    bool cargoReadyFlag;
     Truck * truck;
     void main();
   public:

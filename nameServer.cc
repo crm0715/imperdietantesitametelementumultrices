@@ -1,4 +1,4 @@
-#include <stdlib>
+#include <cstdlib>
 #include "nameServer.h"
 #include "vendingMachine.h"
 
@@ -10,7 +10,7 @@ NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned 
     machines = new VendingMachine*[numVendingMachines];
     registeredVMIndex = 0;
 
-    studentsVMMap= new int[numStudents];
+    studentsVMMap= new unsigned int[numStudents];
     for (unsigned int i = 0 ; i < numStudents; i++) {
         // assign inital vending machine
         studentsVMMap[i] = i % numVendingMachines;
@@ -22,21 +22,21 @@ NameServer::~NameServer(){
     delete[] studentsVMMap;
 } // NameServer::~NameServer
 
-void VMregister( VendingMachine * vendingmachine) {
+void NameServer::VMregister( VendingMachine * vendingmachine) {
     previousRegisteredVM = vendingmachine;
 } // NameServer::VMregister
 
-VendingMachine *getMachine( unsigned int id ) {
+VendingMachine* NameServer::getMachine( unsigned int id ) {
     previousStudentID = id;
     return machines[ studentsVMMap[id] ];
 } // NameServer::getMachine
 
-VendingMachine **getMachineList() {
+VendingMachine** NameServer::getMachineList() {
     return machines;
 } // NameServer::getMachineList
 
 
-void main() {
+void NameServer::main() {
     for ( ;; ) {
         _Accept(~NameServer) {
             break;
@@ -47,9 +47,11 @@ void main() {
             registeredVMIndex ++;
         } or _Accept(getMachine) {
             // Bookkepping after getMachine
-            assert(previousStudentID < numStudents && previousStudentID >= 0)
+            assert(previousStudentID < numStudents);
+            assert(previousStudentID >= 0);
             studentsVMMap[previousStudentID] = (studentsVMMap[previousStudentID] + 1) % numVendingMachines;
-            assert(studentsVMMap[previousStudentID] < numVendingMachines && studentsVMMap[previousStudentID] >= 0);
+            assert(studentsVMMap[previousStudentID] < numVendingMachines);
+            assert(studentsVMMap[previousStudentID] >= 0);
         }
     }
 }

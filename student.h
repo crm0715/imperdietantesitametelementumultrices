@@ -15,6 +15,7 @@ _Task Student {
 	WATCardOffice &cardOffice;
 	unsigned int id;
 	unsigned int numOfPurchases;
+	bool lost;
 	VendingMachine::Flavours favouriteFlavour;
 
 	WATCard *watCardHolder;

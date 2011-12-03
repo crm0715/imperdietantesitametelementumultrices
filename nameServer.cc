@@ -59,7 +59,8 @@ void NameServer::main() {
 
             assert(studentsVMMap[previousStudentID] < numVendingMachines);
             assert(studentsVMMap[previousStudentID] >= 0);
-        }
+        } or _Accept(getMachineList) {
+		} //Accept
     }
     prt.print(Printer::NameServer, 'F');
 }

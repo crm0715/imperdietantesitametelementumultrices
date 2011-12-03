@@ -7,7 +7,7 @@ using namespace std;
 
 Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ) :
 	numStudents( numStudents ), numVendingMachines ( numVendingMachines ), numCouriers ( numCouriers ) {
-	total = BottlingPlant + numStudents + numVendingMachines + numCouriers;
+	total = Student + numStudents + numVendingMachines + numCouriers;
 	for ( unsigned int i = 0; i < total; i++ ) {
 		Buffer buffer;
 		buffer.override = false;
@@ -46,7 +46,7 @@ void Printer::flushBuffer (bool finished) {
 		if (finished && buffers[i].state != 'F') {      					//print ... if one of the state is finished
 			cout << "...\t";
 			continue;
-		} else if (!buffers[i].override) {        					//print nothing if the state is not defined
+		} else if (!buffers[i].override) {        							//print nothing if the state is not defined
 			cout << "\t";
 			continue;
 		} //if
@@ -59,6 +59,7 @@ void Printer::flushBuffer (bool finished) {
 			cout << "," << buffers[i].val2;
 			buffers[i].val2 = -1;
 		} //if
+		cout << "\t";
 	} //for
 	cout << endl;
 	for (unsigned int i = 0; i < total; i++) {         					//clear buffer
@@ -67,6 +68,7 @@ void Printer::flushBuffer (bool finished) {
 } //Printer::flushBuffer
 
 void Printer::printHelper ( Kind kind, unsigned int lid, char state, int val1, int val2) {
+
 	int id = getId (kind, lid);
 	if ( buffers[id].override) flushBuffer(false);
 
@@ -83,9 +85,9 @@ int Printer::getId( Kind kind, unsigned int id) {
 		case Student: 
 			return Student + id;
 		case Vending:
-			return BottlingPlant + numStudents + id;
+			return Student + numStudents + id;
 		case Courier:
-			return BottlingPlant + numStudents + numVendingMachines + id;
+			return Student + numStudents + numVendingMachines + id;
 		default:
 			return kind;
 	} //switch

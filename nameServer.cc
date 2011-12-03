@@ -37,21 +37,29 @@ VendingMachine** NameServer::getMachineList() {
 
 
 void NameServer::main() {
+    prt.print(Printer::NameServer, 'S');
     for ( ;; ) {
         _Accept(~NameServer) {
             break;
         } or _Accept(VMregister) {
-            // Bookkeeping after VMregister
+            // Book keeping
             assert(registeredVMIndex < numVendingMachines);
+
+            prt.print(Printer::NameServer, 'R', previousRegisteredVM->getId());
             machines[registeredVMIndex] = previousRegisteredVM;
             registeredVMIndex ++;
         } or _Accept(getMachine) {
-            // Bookkepping after getMachine
+            // Book kepping
             assert(previousStudentID < numStudents);
             assert(previousStudentID >= 0);
+
+            prt.print(Printer::NameServer, 'N', previousStudentID, machines[studentsVMMap[previousStudentID]]->getId());
+            // assign student to the next vending machine in the list
             studentsVMMap[previousStudentID] = (studentsVMMap[previousStudentID] + 1) % numVendingMachines;
+
             assert(studentsVMMap[previousStudentID] < numVendingMachines);
             assert(studentsVMMap[previousStudentID] >= 0);
         }
     }
+    prt.print(Printer::NameServer, 'F');
 }

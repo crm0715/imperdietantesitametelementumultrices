@@ -17,8 +17,8 @@ _Task Student {
 	unsigned int numOfPurchases;
 	VendingMachine::Flavours favouriteFlavour;
 
-	//WATCard &watCard;
-	FWATCard futureWATCard;
+	WATCard *watCardHolder;
+	FWATCard watCard;
 	VendingMachine *vendingMachine;
 
     void main();

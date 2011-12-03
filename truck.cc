@@ -1,7 +1,6 @@
 #include "truck.h"
 #include "MPRNG.h"
 #include "vendingMachine.h"
-#include "nameServer.h"
 
 extern MPRNG prng;
 

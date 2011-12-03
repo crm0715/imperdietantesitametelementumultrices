@@ -24,7 +24,7 @@ void usage ( char* program ) {
 
 void uMain::main() {
 
-	char* configFile = ( char* ) "sode.config";
+	char* configFile = ( char* ) "soda.config";
 	int seed = ( int ) getpid();
 	struct ConfigParms configParms;
 

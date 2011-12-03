@@ -18,19 +18,18 @@ void Truck::main() {
 			break;
 		} //if
 		int shipmentTotal = 0;
-		for ( int flavour = 0; flavour <= VendingMachine::NUM_OF_FLAVOURS; flavour++ ) {
+		for ( int flavour = 0; flavour < VendingMachine::NUM_OF_FLAVOURS; flavour++ ) {
 			shipmentTotal += cargo[flavour];
 		} //for
 		prt.print ( Printer::Truck, 'P', shipmentTotal );
-		int count = 0;
-		while ( vendingMachines[count] != NULL ) {
-			VendingMachine *vendingMachine = vendingMachines[count];
+		for ( unsigned int i = 0; i < numVendingMachines; i++ ) {
+			VendingMachine *vendingMachine = vendingMachines[i];
 			unsigned int *inventory = vendingMachine->inventory();
 			int remaining = 0;
 
 			prt.print ( Printer::Truck, 'd', vendingMachine->getId(), shipmentTotal );
 
-			for ( int flavour = 0; flavour <= VendingMachine::NUM_OF_FLAVOURS; flavour++ ) {		//loop through all the flavours
+			for ( int flavour = 0; flavour < VendingMachine::NUM_OF_FLAVOURS; flavour++ ) {		//loop through all the flavours
 				if ( inventory[flavour] < maxStockPerFlavour ) {
 					int available = cargo[flavour];
 					int need = maxStockPerFlavour - inventory[flavour];
@@ -53,9 +52,8 @@ void Truck::main() {
 				prt.print ( Printer::Truck, 'D', vendingMachine->getId(), shipmentTotal );
 			}//if
 			vendingMachine->restocked();
-			count++;
 			if ( shipmentTotal == 0 ) break;
-		} //while
+		} //for
 	}//while
 }//main
 

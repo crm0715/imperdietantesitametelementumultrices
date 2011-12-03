@@ -11,12 +11,12 @@ Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffi
 	numOfPurchases = prng ( 1, maxPurchases );
 	favouriteFlavour = (VendingMachine::Flavours) prng ( 0, VendingMachine::NUM_OF_FLAVOURS - 1 );
 
-	prt.print ( Printer::Student, 'S', (int) favouriteFlavour, (int) numOfPurchases );
+	prt.print ( Printer::Student, id, 'S', (int) favouriteFlavour, (int) numOfPurchases );
 
 	watCard = cardOffice.create ( id, 5, watCardHolder );
 	vendingMachine = nameServer.getMachine ( id );
 
-	prt.print ( Printer::Student, 'V', vendingMachine->getId() );
+	prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
 } //Student::Student
 
 void Student::main() {
@@ -37,7 +37,7 @@ void Student::main() {
 							watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard() );
 							break;
 						case VendingMachine::BUY:
-							prt.print ( Printer::Student, 'B', watCard()->getBalance() );
+							prt.print ( Printer::Student, id, 'B', watCard()->getBalance() );
 							done = true;
 							break;
 					} //switch
@@ -49,5 +49,5 @@ void Student::main() {
 			} //try
 		} //while
 	} //for
-	prt.print ( Printer::Student, 'F' );
+	prt.print ( Printer::Student, id, 'F' );
 } //Student::main

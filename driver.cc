@@ -42,6 +42,22 @@ void uMain::main() {
 
 	processConfigFile ( configFile, configParms );
 
+	cout << "Parent\tWATOff\tNames\tTruck\tPlant\t";
+
+	for (unsigned int i = 0; i < configParms.numStudents; i++) 
+		cout << "Stud:" << i << "\t";
+
+	for (unsigned int i = 0; i < configParms.numVendingMachines; i++) 
+		cout << "Mach:" << i << "\t";
+
+	for (unsigned int i = 0; i < configParms.numCouriers; i++) 
+		cout << "Cour:" << i << "\t";
+	cout << endl;
+
+	for (unsigned int i = 0; i < 5 + configParms.numStudents + configParms.numVendingMachines + configParms.numCouriers; i++)
+	cout << "*******\t";
+	cout << endl;
+
 	Printer printer ( configParms.numStudents, configParms.numVendingMachines, configParms.numCouriers );
 	Bank bank ( configParms.numStudents );
 	Parent parent ( printer, bank, configParms.numStudents, configParms.parentalDelay );
@@ -70,5 +86,8 @@ void uMain::main() {
 	for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
 		delete vendingMachines[i];
 	} //for
+
+
+//	cout << "******************" << endl;
 
 } // uMain::main

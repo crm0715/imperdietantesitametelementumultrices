@@ -15,6 +15,10 @@ BottlingPlant::BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int
     truck = new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour);
 } // BottlingPlant::BottlingPlant
 
+BottlingPlant::~BottlingPlant() {
+	delete truck;
+} //BottlingPlant::~BottlingPlant
+
 
 bool BottlingPlant::getShipment(unsigned int cargo[]) {
     if (plantClosingFlag) {
@@ -29,7 +33,6 @@ bool BottlingPlant::getShipment(unsigned int cargo[]) {
     for (int i = 0; i < VendingMachine::NUM_OF_FLAVOURS; i++) {
         cargo[i] = soda[i];
     } // for
-
     return false;
 } // BottlingPlant::getShipment
 
@@ -43,14 +46,14 @@ void BottlingPlant::main() {
             count += soda[i];
         } // for
         prt.print(Printer::BottlingPlant, 'G', count);
-
         // wake up truck
         cargoReadyFlag = true;
         cargoReadyLock.signal();
 
         _Accept(~BottlingPlant) {
             plantClosingFlag = true;
-            delete truck; // wait for truck to complete final round
+			 _Accept(getShipment) // wait for truck to complete final round
+            //delete truck; // wait for truck to complete final round
             break;
         } or _Accept(getShipment) {
             prt.print(Printer::BottlingPlant, 'P');

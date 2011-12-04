@@ -36,8 +36,6 @@ WATCardOffice::Job *WATCardOffice::requestWork() {
         return NULL;
     } // if
 
-    _When (jobs.empty()) _Accept(createJob);
-
     return jobs.front();
 } //WATCardOffice::requestWork
 
@@ -75,10 +73,9 @@ void WATCardOffice::main() {
             prt.print(Printer::WATCardOffice, 'T', previousArgs.sid, previousArgs.amount);
 
             createJob();
-        } or _Accept(requestWork) {
+        } or _When (!jobs.empty()) _Accept(requestWork) {
             prt.print(Printer::WATCardOffice, 'W');
 
-            assert(!jobs.empty());
             jobs.pop_front();
         } // _Accept
     } // for

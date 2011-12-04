@@ -7,6 +7,10 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     sodaCost(sodaCost),
     maxStockPerFlavour(maxStockPerFlavour)
 {
+    // initialize array
+    for (int i = 0; i < NUM_OF_FLAVOURS; i++) {
+        stock[i] = 0;
+    } // for
     nameServer.VMregister(this);
 } //VendingMachine::VendingMachine
 
@@ -35,7 +39,7 @@ _Nomutex unsigned int VendingMachine::getId() {
 } //VendingMachine::getId
 
 void VendingMachine::main() {
-    prt.print(Printer::Vending, id, 'S');
+    prt.print(Printer::Vending, id, 'S', sodaCost);
     for ( ;; ) {
         _Accept(~VendingMachine) {
             break;

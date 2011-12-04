@@ -63,7 +63,7 @@ void BottlingPlant::main() {
     } // for
     prt.print(Printer::BottlingPlant, 'F');
 
-        // wait for truck to complete final round
+    // wait for truck to complete final round
     plantClosingFlag = true;
 	_Accept(getShipment)
 } // BottlingPlant::main()

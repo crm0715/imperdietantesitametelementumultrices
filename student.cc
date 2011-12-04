@@ -31,18 +31,23 @@ void Student::main() {
 			if (!lost) yield ( prng ( 1, 10 ) );
 			try {
 				_Enable {
-					lost = false;
-					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *(watCard()) );
+                    do {
+                        lost = false;
+                        watCard();
+                    } while (lost);
+
+					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard);
 					if (!lost) {
+
 						switch (status) {
 							case VendingMachine::STOCK:
 								vendingMachine = nameServer.getMachine ( id );
 								break;
 							case VendingMachine::FUNDS:
-								watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard() );
+								watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard );
 								break;
 							case VendingMachine::BUY:
-								prt.print ( Printer::Student, id, 'B', watCard()->getBalance() );
+								prt.print ( Printer::Student, id, 'B', (*watCard).getBalance() );
 								done = true;
 								break;
 						} //switch

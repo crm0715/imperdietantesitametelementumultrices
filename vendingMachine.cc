@@ -1,4 +1,5 @@
 #include "vendingMachine.h"
+#include <iostream>
 
 VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost, unsigned int maxStockPerFlavour ) :
     prt(prt),
@@ -15,11 +16,16 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
 } //VendingMachine::VendingMachine
 
 VendingMachine::Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
-  if (card.getBalance() < sodaCost) return FUNDS;
-  if (stock[flavour] < 1) return STOCK;
-    flavourBought = flavour;
-    card.withdraw(sodaCost);
-    return BUY;
+    if (card.getBalance() < sodaCost) {
+        status = FUNDS;
+    } else if (stock[flavour] < 1) {
+        status = STOCK;
+    } else {
+        flavourBought = flavour;
+        card.withdraw(sodaCost);
+        status = BUY;
+    }  // if
+    return status;
 } //VendingMachine::buy
 
 unsigned int *VendingMachine::inventory() {
@@ -49,8 +55,10 @@ void VendingMachine::main() {
                 prt.print(Printer::Vending, id, 'R');
             } // _Accept
         } or _Accept(buy) {
-            stock[flavourBought]--;
-            prt.print(Printer::Vending, id, 'B', (int)flavourBought, stock[flavourBought]);
+            if (status == BUY) {
+                stock[flavourBought]--;
+                prt.print(Printer::Vending, id, 'B', (int)flavourBought, stock[flavourBought]);
+            } // if
         } //_Accept
     } // for
     prt.print(Printer::Vending, id, 'F');

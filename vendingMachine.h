@@ -9,6 +9,7 @@
 _Task VendingMachine {
   public:
     enum Flavours { RABBIT, CAT, DOG, BEAR, NUM_OF_FLAVOURS }; 			// flavours of soda (YOU DEFINE)
+    enum Status { BUY, STOCK, FUNDS };		// purchase status: successful buy, out of stock, insufficient funds
   private:
     Printer &prt;
     NameServer &nameServer;
@@ -19,9 +20,9 @@ _Task VendingMachine {
     unsigned int stock[NUM_OF_FLAVOURS];
     Flavours flavourBought;
     WATCard *cardUsed;
+    Status status;
     void main();
   public:
-    enum Status { BUY, STOCK, FUNDS };		// purchase status: successful buy, out of stock, insufficient funds
     VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost, unsigned int maxStockPerFlavour );
     Status buy( Flavours flavour, WATCard &card );
     unsigned int *inventory();

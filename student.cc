@@ -19,50 +19,44 @@ Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffi
 void Student::main() {
 	Student *This = this;
 	prt.print ( Printer::Student, id, 'S', (int) favouriteFlavour, (int) numOfPurchases );
+	
+	watCard = cardOffice.create ( id, 5, watCardHolder );
+	vendingMachine = nameServer.getMachine ( id );
 
-	try {
-		_Enable {
-			watCard = cardOffice.create ( id, 5, watCardHolder );
-			vendingMachine = nameServer.getMachine ( id );
+	prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
 
-			prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
-			for ( unsigned int i = 0; i < numOfPurchases; i++ ) {
-				bool done = false;
-				while (!done) {
-					if (!lost) yield ( prng ( 1, 10 ) );
-						lost = false;
-						//cout << "address1: " << watCard() <<endl;
-						cout << "student attempt buy" << endl;
-						VendingMachine::Status status;
-						if (watCard.available())
-							status = vendingMachine->buy ( favouriteFlavour, *watCard );
-						cout << "student finished buy" << endl;
-						//cout << "address2: " << watCard() <<endl;
-						if (!lost) {
-							switch (status) {
-								case VendingMachine::STOCK:
-									vendingMachine = nameServer.getMachine ( id );
-									break;
-								case VendingMachine::FUNDS:
-									watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard );
-									break;
-								case VendingMachine::BUY:
-									prt.print ( Printer::Student, id, 'B', *watCard.getBalance() );
-									done = true;
-									break;
-							} //switch
-						} //if
-				} //while
-			} //for
-		} //Enable
-	} _CatchResume( WATCardOffice::Lost &lost ) (Student *This) {
-				cout << "student exception" << endl;
+	for ( unsigned int i = 0; i < numOfPurchases; i++ ) {
+		bool done = false;
+		while (!done) {
+			yield ( prng ( 1, 10 ) );
+			try {
+				_Enable {
+                    do {
+                        lost = false;
+                        watCard();
+                    } while (lost);
+				} //Enable
+
+				VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard);
+				switch (status) {
+					case VendingMachine::STOCK:
+						vendingMachine = nameServer.getMachine ( id );
+						break;
+					case VendingMachine::FUNDS:
+						watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard );
+						break;
+					case VendingMachine::BUY:
+						prt.print ( Printer::Student, id, 'B', (*watCard).getBalance() );
+						done = true;
+						break;
+				} //switch
+			} _CatchResume( WATCardOffice::Lost &lost ) (Student *This) {
 				This->prt.print ( Printer::Student, This->id, 'L' );
 				delete This->watCardHolder;
 				This->watCard = This->cardOffice.create ( This->id, 5, This->watCardHolder );
 				This->lost = true;
-				//cout << "address3: " << This->watCard() <<endl;
-				cout << "student done exception" << endl;
 			} //try
+		}//while
+	} ///for
 	prt.print ( Printer::Student, id, 'F' );
 } //Student::main

@@ -18,7 +18,6 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
 } //VendingMachine::VendingMachine
 
 VendingMachine::Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
-	cout << "address: " << &card <<endl;
     if (card.getBalance() < sodaCost) {
         status = FUNDS;
     } else if (stock[flavour] < 1) {

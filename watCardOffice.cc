@@ -1,5 +1,6 @@
 #include "watCardOffice.h"
 #include "MPRNG.h"
+#include <iostream>
 
 using namespace std;
 extern MPRNG prng;
@@ -114,7 +115,7 @@ void WATCardOffice::Courier::main() {
         arg.card->deposit(arg.amount);
 
         // 1 in 6 chance of losing a card
-        if (prng(0,5) == 0) {
+        if (prng(0,1) == 0) {
             job->result.exception(new Lost);
         } else {
             job->result.delivery(arg.card);

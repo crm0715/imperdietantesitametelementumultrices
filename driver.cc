@@ -58,39 +58,36 @@ void uMain::main() {
 	cout << "*******\t";
 	cout << endl;
 
-	Printer printer ( configParms.numStudents, configParms.numVendingMachines, configParms.numCouriers );
-	Bank *bank = new Bank ( configParms.numStudents );
-	Parent *parent = new Parent ( printer, *bank, configParms.numStudents, configParms.parentalDelay );
-	WATCardOffice *office = new WATCardOffice( printer, *bank, configParms.numCouriers );
-	NameServer *nameServer = new NameServer ( printer, configParms.numVendingMachines, configParms.numStudents );
+	{
+		Printer printer ( configParms.numStudents, configParms.numVendingMachines, configParms.numCouriers );
+		Bank bank ( configParms.numStudents );
+		Parent parent ( printer, bank, configParms.numStudents, configParms.parentalDelay );
+		WATCardOffice office ( printer, bank, configParms.numCouriers );
+		NameServer nameServer ( printer, configParms.numVendingMachines, configParms.numStudents );
 
-	VendingMachine *vendingMachines[configParms.numVendingMachines];
+		VendingMachine *vendingMachines[configParms.numVendingMachines];
 	
-	for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
-		vendingMachines[i] = new VendingMachine ( printer, *nameServer, i, configParms.sodaCost, configParms.maxStockPerFlavour );
-	} //for
+		for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
+			vendingMachines[i] = new VendingMachine ( printer, nameServer, i, configParms.sodaCost, configParms.maxStockPerFlavour );
+		} //for
 	
-    BottlingPlant *bottlingPlant  = new BottlingPlant ( printer, *nameServer, configParms.numVendingMachines, configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour, configParms.timeBetweenShipments );
+		BottlingPlant *bottlingPlant  = new BottlingPlant ( printer, nameServer, configParms.numVendingMachines, configParms.maxShippedPerFlavour, configParms.maxStockPerFlavour, configParms.timeBetweenShipments );
 
-	Student *student[configParms.numStudents];
+		Student *student[configParms.numStudents];
 
-	for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
-		student[i] = new Student ( printer, *nameServer, *office, i, configParms.maxPurchases );
-	} //for
+		for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
+			student[i] = new Student ( printer, nameServer, office, i, configParms.maxPurchases );
+		} //for
 
-	for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
-		delete student[i];		
-	} //for
+		for ( unsigned int i = 0; i < configParms.numStudents; i++ ) {
+			delete student[i];		
+		} //for
 
-	delete bottlingPlant;
-	for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
-		delete vendingMachines[i];
-	} //for
-
-	delete nameServer;
-	delete office;
-	delete parent;
-	delete bank;
+		delete bottlingPlant;
+		for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
+			delete vendingMachines[i];
+		} //for
+	}
 
 	cout << "***********************" << endl;
 

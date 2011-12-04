@@ -32,21 +32,24 @@ void Student::main() {
 			try {
 				_Enable {
 					lost = false;
-					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard() );
-					switch (status) {
-						case VendingMachine::STOCK:
-							vendingMachine = nameServer.getMachine ( id );
-							break;
-						case VendingMachine::FUNDS:
-							watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard() );
-							break;
-						case VendingMachine::BUY:
-							prt.print ( Printer::Student, id, 'B', watCard()->getBalance() );
-							done = true;
-							break;
-					} //switch
+					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *(watCard()) );
+					if (!lost) {
+						switch (status) {
+							case VendingMachine::STOCK:
+								vendingMachine = nameServer.getMachine ( id );
+								break;
+							case VendingMachine::FUNDS:
+								watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard() );
+								break;
+							case VendingMachine::BUY:
+								prt.print ( Printer::Student, id, 'B', watCard()->getBalance() );
+								done = true;
+								break;
+						} //switch
+					} //if
 				} //_Enable
 			} _CatchResume( WATCardOffice::Lost &lost ) (Student *This) {
+				prt.print ( Printer::Student, id, 'L' );
 				delete This->watCardHolder;
 				This->watCard = This->cardOffice.create ( This->id, 5, This->watCardHolder );
 				This->lost = true;

@@ -16,6 +16,10 @@ Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffi
 	favouriteFlavour = (VendingMachine::Flavours) prng ( 0, VendingMachine::NUM_OF_FLAVOURS - 1 );
 } //Student::Student
 
+Student::~Student() {
+    delete watCardHolder;
+}
+
 void Student::main() {
 	Student *This = this;
 	prt.print ( Printer::Student, id, 'S', (int) favouriteFlavour, (int) numOfPurchases );

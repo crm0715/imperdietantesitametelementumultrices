@@ -31,7 +31,7 @@ _Task WATCardOffice {
         Courier(Printer &prt, Bank &bank, WATCardOffice &cardOffice, unsigned int id);
     };
 
-    _Mutex void createJob(); // used by server to create jobs for courier
+    void createJob(); // used by server to create jobs for courier
     FWATCard transferHelper(unsigned int sid, unsigned int amount, WATCard *card); // used by client to indicate transfer of money is needed
     std::list<Job *> jobs;
     std::vector<Courier *> couriers;

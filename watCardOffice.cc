@@ -1,5 +1,4 @@
 #include "watCardOffice.h"
-#include <iostream>
 
 using namespace std;
 
@@ -23,7 +22,6 @@ WATCardOffice::~WATCardOffice() {
 } // WATCardOffice::~WATCardOffice
 
 FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount, WATCard *&card ) {
-	cout << "wat card office: create" << endl;
     card = new WATCard();
 
     return transferHelper(sid, amount, card);
@@ -67,7 +65,6 @@ void WATCardOffice::createJob() {
 void WATCardOffice::main() {
     prt.print(Printer::WATCardOffice, 'S');
     for ( ;; ) {
-		cout << "bill chan" << endl;
         _Accept(~WATCardOffice) {
             break;
         } or _Accept(create) {

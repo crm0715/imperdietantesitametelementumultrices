@@ -26,6 +26,7 @@ _Task Student {
   public:
     Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id,
              unsigned int maxPurchases );
+    ~Student();
 };
 
 #endif

@@ -23,6 +23,10 @@ Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffi
 	prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
 } //Student::Student
 
+Student::~Student() {
+    delete watCardHolder;
+}
+
 void Student::main() {
 	Student *This = this;
 	for ( unsigned int i = 0; i < numOfPurchases; i++ ) {

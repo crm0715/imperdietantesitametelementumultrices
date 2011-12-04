@@ -4,7 +4,8 @@
 using namespace std;
 
 WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers ) :
-    prt(prt)
+    prt(prt),
+    officeClosingDown(false)
 {
     for (unsigned int i = 0; i < numCouriers; i++) {
         Courier *courier = new Courier(prt, bank, *this, i);
@@ -33,13 +34,11 @@ FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount, WATCard
 } //WATCardOffice::transfer
 
 WATCardOffice::Job *WATCardOffice::requestWork() {
-    if (jobs.empty()) {
-        _Accept(~WATCardOffice) {
-            return NULL;
-        } or _Accept(createJob) {
-
-        } // _Accept
+    if (officeClosingDown) {
+        return NULL;
     } // if
+
+    _When (jobs.empty()) _Accept(createJob);
 
     return jobs.front();
 } //WATCardOffice::requestWork
@@ -87,6 +86,13 @@ void WATCardOffice::main() {
         } // _Accept
     } // for
     prt.print(Printer::WATCardOffice, 'F');
+
+    // wait for couriers to finish
+    officeClosingDown = true;
+    for (unsigned int i = 0; i < couriers.size(); i++) {
+        _Accept(requestWork);
+    } // for
+
 } //WATCardOffice::main
 
 WATCardOffice::Courier::Courier(Printer &prt, Bank &bank, WATCardOffice &cardOffice, unsigned int id) :

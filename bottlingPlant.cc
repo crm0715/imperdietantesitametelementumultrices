@@ -51,9 +51,6 @@ void BottlingPlant::main() {
         cargoReadyLock.signal();
 
         _Accept(~BottlingPlant) {
-            plantClosingFlag = true;
-			 _Accept(getShipment) // wait for truck to complete final round
-            //delete truck; // wait for truck to complete final round
             break;
         } or _Accept(getShipment) {
             prt.print(Printer::BottlingPlant, 'P');
@@ -65,4 +62,8 @@ void BottlingPlant::main() {
         } // _Accept
     } // for
     prt.print(Printer::BottlingPlant, 'F');
+
+        // wait for truck to complete final round
+    plantClosingFlag = true;
+	_Accept(getShipment)
 } // BottlingPlant::main()

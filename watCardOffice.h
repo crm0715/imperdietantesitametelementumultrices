@@ -36,11 +36,13 @@ _Task WATCardOffice {
     std::list<Job *> jobs;
     std::vector<Courier *> couriers;
 
+    Printer &prt;
+
     // for communication
     Args previousArgs;
     FWATCard previousFWATCard;
+    bool officeClosingDown;
 
-    Printer &prt;
     void main();
   public:
     _Event Lost {};

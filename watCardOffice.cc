@@ -104,10 +104,14 @@ void WATCardOffice::Courier::main() {
         Job *job = cardOffice.requestWork();
       if (!job) break;
         Args arg = job->args;
+
         prt.print(Printer::Courier, id, 't', arg.sid, arg.amount);
         bank.withdraw(arg.sid, arg.amount);
         prt.print(Printer::Courier, id, 'T', arg.sid, arg.amount);
+
         arg.card->deposit(arg.amount);
+
+        job->result.delivery(arg.card);
         delete job;
     } // for
     prt.print(Printer::Courier, id, 'F');

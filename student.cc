@@ -49,7 +49,7 @@ void Student::main() {
 					} //if
 				} //_Enable
 			} _CatchResume( WATCardOffice::Lost &lost ) (Student *This) {
-				prt.print ( Printer::Student, id, 'L' );
+				This->prt.print ( Printer::Student, This->id, 'L' );
 				delete This->watCardHolder;
 				This->watCard = This->cardOffice.create ( This->id, 5, This->watCardHolder );
 				This->lost = true;

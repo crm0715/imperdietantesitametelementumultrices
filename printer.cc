@@ -77,7 +77,10 @@ void Printer::printHelper ( Kind kind, unsigned int lid, char state, int val1, i
 	buffers[id].val1 = val1;
 	buffers[id].val2 = val2;
 
-	if ( state == 'F' ) flushBuffer(true);
+	if ( state == 'F' ) {
+		flushBuffer(true);
+		buffers[id].state = '-';
+	}
 } //Printer::printHelper
 
 int Printer::getId( Kind kind, unsigned int id) {

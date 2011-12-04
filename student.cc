@@ -33,7 +33,6 @@ void Student::main() {
 				_Enable {
 					lost = false;
 					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard() );
-
 					switch (status) {
 						case VendingMachine::STOCK:
 							vendingMachine = nameServer.getMachine ( id );

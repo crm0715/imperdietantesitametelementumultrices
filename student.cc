@@ -1,6 +1,10 @@
 #include "student.h"
 #include "MPRNG.h"
 
+#include <iostream>
+
+using namespace std;
+
 extern MPRNG prng;
 
 Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id,
@@ -13,7 +17,9 @@ Student::Student ( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffi
 
 	prt.print ( Printer::Student, id, 'S', (int) favouriteFlavour, (int) numOfPurchases );
 
+	cout << "create wat card" << endl;
 	watCard = cardOffice.create ( id, 5, watCardHolder );
+	cout << "done create wat card" << endl;
 	vendingMachine = nameServer.getMachine ( id );
 
 	prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );

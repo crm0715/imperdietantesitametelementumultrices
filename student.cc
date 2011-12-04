@@ -21,7 +21,6 @@ Student::~Student() {
 }
 
 void Student::main() {
-	Student *This = this;
 	prt.print ( Printer::Student, id, 'S', (int) favouriteFlavour, (int) numOfPurchases );
 	
 	watCard = cardOffice.create ( id, 5, watCardHolder );
@@ -32,35 +31,35 @@ void Student::main() {
 	for ( unsigned int i = 0; i < numOfPurchases; i++ ) {
 		bool done = false;
 		while (!done) {
-			yield ( prng ( 1, 10 ) );
-			try {
-				_Enable {
-                    do {
-                        lost = false;
-                        watCard();
-                    } while (lost);
-				} //Enable
-
-				VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard);
-				switch (status) {
-					case VendingMachine::STOCK:
-						vendingMachine = nameServer.getMachine ( id );
-						prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
-						break;
-					case VendingMachine::FUNDS:
-						watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard );
-						break;
-					case VendingMachine::BUY:
-						prt.print ( Printer::Student, id, 'B', (*watCard).getBalance() );
-						done = true;
-						break;
-				} //switch
-			} _CatchResume( WATCardOffice::Lost &lost ) (Student *This) {
-				This->prt.print ( Printer::Student, This->id, 'L' );
-				delete This->watCardHolder;
-				This->watCard = This->cardOffice.create ( This->id, 5, This->watCardHolder );
-				This->lost = true;
-			} //try
+			yield ( prng ( 1, 10 ) );			
+			do {
+				try {
+					_Enable {
+		      	    	lost = false;
+		            	watCard();
+					} //Enable
+				
+					VendingMachine::Status status = vendingMachine->buy ( favouriteFlavour, *watCard);
+					switch (status) {
+						case VendingMachine::STOCK:
+							vendingMachine = nameServer.getMachine ( id );
+							prt.print ( Printer::Student, id, 'V', vendingMachine->getId() );
+							break;
+						case VendingMachine::FUNDS:
+							watCard = cardOffice.transfer ( id, vendingMachine->cost() + 5, watCard );
+							break;
+						case VendingMachine::BUY:
+							prt.print ( Printer::Student, id, 'B', (*watCard).getBalance() );
+							done = true;
+							break;
+					} //switch
+				} catch( WATCardOffice::Lost &lostException ) {
+					prt.print ( Printer::Student, id, 'L' );
+					delete watCardHolder;
+					watCard = cardOffice.create ( id, 5, watCardHolder );
+					lost = true;
+				} //try
+			} while (lost);//while
 		}//while
 	} ///for
 	prt.print ( Printer::Student, id, 'F' );

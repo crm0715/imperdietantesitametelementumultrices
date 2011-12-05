@@ -1,0 +1,56 @@
+ALGORITHM TESTING
+  Note: random number generator is sometime replaced with hardset values to better control the test case
+
+  Piece Wise Test Case 1:  Testing interacting of vending machine, bottling plant, nameServer, truck, truck doesn't wait for plant
+    soda.config file Modification:  Very large parentDelay(10000), very high soda cost(10000), maxStock per flavour = 4, 
+    low TimeBetweenShipment(0), 2 vendingMachines
+    Forced random number generator: plant produce 5 bottles of flavour 0 and 3 bottles of flavour 1-3
+    Ran with ./soda soda.config 1
+
+  Expected Result:
+    First ran for truck,  vendingMachine 1 get 4 bottles of flavour 0, 3 bottles of flavour 1-3,
+      vendingMachine 2 get 1 bottles of flavour 0
+    Second ran for truck, vendingMachine 1 get 1 bottles of flavour 1-3
+      vendingMachine 2 get 3 bottles of flavour 0 and 2 bottles of flavour 1-3
+    Third ran for truck, vendingMachine 2 get 2 bottles of flavour 1-3, truck successfully filled all vendingMachine
+    Fourth ran for truck,  trunk visits all vendingMachine but does nothing because all vendingMachine is full
+
+  Actual Result:
+    Area of interest
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:10000                 
+     5                  R:1     S       S                       S:10000         
+     6                          P:14    G:14    S:1,10                          
+     7                          d:0,14                                          
+     8          C:0,5           U:0,3   P       V:0                             
+     9                  N:0,0   d:1,1   G:14            r               t:0,5   
+    10          W               U:1,15                  R       r               
+    11                          P:14                            R               
+    12                          d:0,14                                          
+    13                          D:0,11  P                                       
+    14                          d:1,11  G:14            r                       
+    15                          U:1,6                   R       r               
+    16                          P:14                            R               
+    17                          d:0,14                                          
+    18                          D:0,14  P                                       
+    19                          d:1,14  G:14            r                       
+    20                          D:1,8                   R       r               
+    21                          P:14                            R               
+    22                          d:0,14                                          
+    23                          D:0,14  P                                       
+    24                          d:1,14  G:14            r                       
+    25                          D:1,14                  R       r               
+
+  Analysis
+   Proves that:
+   1. Vending Machine is registering to NameServer correctly
+   2. 
+
+
+    
+
+
+
+

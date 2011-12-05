@@ -42,19 +42,18 @@ void NameServer::main() {
         _Accept(~NameServer) {
             break;
         } or _Accept(VMregister) {
-            // Book keeping
             assert(registeredVMIndex < numVendingMachines);
 
             prt.print(Printer::NameServer, 'R', previousRegisteredVM->getId());
+            // Book keeping
             machines[registeredVMIndex] = previousRegisteredVM;
             registeredVMIndex ++;
         } or _Accept(getMachine) {
-            // Book kepping
             assert(previousStudentID < numStudents);
             assert(previousStudentID >= 0);
 
             prt.print(Printer::NameServer, 'N', previousStudentID, machines[studentsVMMap[previousStudentID]]->getId());
-            // assign student to the next vending machine in the list
+            // Book keeping: assign student to the next vending machine in the list
             studentsVMMap[previousStudentID] = (studentsVMMap[previousStudentID] + 1) % numVendingMachines;
 
             assert(studentsVMMap[previousStudentID] < numVendingMachines);

@@ -18,10 +18,14 @@ void Parent::main() {
         _Accept(~Parent) {
             break;
         } else {
+            // busy wait
             yield(parentalDelay);
+
             int randAmount = prng(1,3);
             int randStudent = prng(0, numStudents - 1);
             prt.print(Printer::Parent, 'D', randStudent, randAmount);
+
+            // Deposit money
             bank.deposit(randStudent, randAmount);
         } // _Accept
     } // for

@@ -26,6 +26,7 @@ bool BottlingPlant::getShipment(unsigned int cargo[]) {
     } // if
 
     if (!cargoReadyFlag) {
+        // wait for cargo to be ready
         cargoReadyLock.wait();
     } // if
 
@@ -39,13 +40,17 @@ bool BottlingPlant::getShipment(unsigned int cargo[]) {
 void BottlingPlant::main() {
     prt.print(Printer::BottlingPlant, 'S');
     for ( ;; ) {
-        yield(timeBetweenShipments); // simulate producation
+        // simulate producation
+        yield(timeBetweenShipments);
+
+        // produce some soda
         int count = 0;
         for (int i = 0; i < VendingMachine::NUM_OF_FLAVOURS; i++) {
             soda[i] = prng(0, maxShippedPerFlavour);
             count += soda[i];
         } // for
         prt.print(Printer::BottlingPlant, 'G', count);
+
         // wake up truck
         cargoReadyFlag = true;
         cargoReadyLock.signal();
@@ -54,7 +59,7 @@ void BottlingPlant::main() {
             break;
         } or _Accept(getShipment) {
             prt.print(Printer::BottlingPlant, 'P');
-            // book kepping
+            // book keeping
             for (int i = 0; i < VendingMachine::NUM_OF_FLAVOURS; i++) {
                 soda[i] = 0;
             } // for

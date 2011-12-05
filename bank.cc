@@ -2,22 +2,20 @@
 
 Bank::Bank( unsigned int numStudents ) {
 	for ( unsigned int i = 0; i < numStudents; i++ ) {
-		balance.push_back(0); 					//initialize all student balances as zero
+		balance.push_back(0); 										//initialize all student balances as zero
 	}
 } //Bank
 
-//TODO use wait(amount) and front to signal
-
 void Bank::deposit( unsigned int id, unsigned int amount ) {
-	balance[id] += amount;
+	balance[id] += amount;											//increase balance
 	while (!lock.empty()) {
 		lock.signal();
 	} //while
 } //deposit
 
 void Bank::withdraw( unsigned int id, unsigned int amount ) {
-	while (amount > balance[id]) {
+	while (amount > balance[id]) {									//lock until there is enough balance
 		lock.wait();
 	} //while
-	balance[id] -= amount;
+	balance[id] -= amount;											//decrease balance
 } //withdraw

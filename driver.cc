@@ -18,19 +18,19 @@ using namespace std;
 MPRNG prng;
 
 void usage ( char* program ) {
-  cerr << "Usage: " << program << " lalala error message" << endl;
+  cerr << "Usage: " << program << " [ config-file [ random-seed (> 0) ] ]" << endl;
   exit( EXIT_FAILURE );	
 } //usage
 
 void uMain::main() {
 
-	char* configFile = ( char* ) "soda.config";
-	int seed = ( int ) getpid();
+	char* configFile = ( char* ) "soda.config";				//set default config file name to "sode.config"
+	int seed = ( int ) getpid();							//set default seed to pid
 	struct ConfigParms configParms;
 
 	try {
 		if ( argc > 1 ) configFile = ( argv[1] );			//if exist, set config file
-		if ( argc > 2 ) seed = atoi ( argv[2] );        		//if exists, set seed
+		if ( argc > 2 ) seed = atoi ( argv[2] );        	//if exists, set seed
 		if ( argc > 3 || seed <= 0 ) {  					//Error checking for argument length and seed
 			usage ( argv[0] );
 		}
@@ -38,10 +38,11 @@ void uMain::main() {
 		usage ( argv[0] );
 	} //try
 
-	prng.seed ( seed );
+	prng.seed ( seed );										//set seed
 
-	processConfigFile ( configFile, configParms );
+	processConfigFile ( configFile, configParms );			//process config file
 
+	//Print start message
 	cout << "Parent\tWATOff\tNames\tTruck\tPlant\t";
 
 	for (unsigned int i = 0; i < configParms.numStudents; i++) 
@@ -58,6 +59,7 @@ void uMain::main() {
 	cout << "*******\t";
 	cout << endl;
 
+	//Set up
 	{
 		Printer printer ( configParms.numStudents, configParms.numVendingMachines, configParms.numCouriers );
 		Bank bank ( configParms.numStudents );
@@ -83,12 +85,13 @@ void uMain::main() {
 			delete student[i];		
 		} //for
 
-		delete bottlingPlant;
+		delete bottlingPlant;														//delete bottling plant before vending machines
 		for ( unsigned int i = 0; i < configParms.numVendingMachines; i++ ) {
 			delete vendingMachines[i];
 		} //for
 	}
 
+	//Print end message
 	cout << "***********************" << endl;
 
 } // uMain::main

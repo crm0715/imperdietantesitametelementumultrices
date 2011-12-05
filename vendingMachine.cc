@@ -53,11 +53,13 @@ void VendingMachine::main() {
             break;
         } or _Accept(inventory) {
             prt.print(Printer::Vending, id, 'r');
+            // cannot accept another call until vending machine is restocked
             _Accept(restocked) {
                 prt.print(Printer::Vending, id, 'R');
             } // _Accept
         } or _Accept(buy) {
             if (status == BUY) {
+                // Book keeping if student bought soda
                 stock[flavourBought]--;
                 prt.print(Printer::Vending, id, 'B', (int)flavourBought, stock[flavourBought]);
             } // if

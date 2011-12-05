@@ -9,6 +9,7 @@ WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers
     prt(prt),
     officeClosingDown(false)
 {
+    // create couriers
     for (unsigned int i = 0; i < numCouriers; i++) {
         Courier *courier = new Courier(prt, bank, *this, i);
         couriers.push_back(courier);
@@ -19,6 +20,7 @@ WATCardOffice::~WATCardOffice() {
     for (unsigned int i = 0; i < couriers.size(); i++) {
         delete couriers[i];
     } // for
+
     for (list<Job *>::const_iterator iter = jobs.begin(); iter != jobs.end(); ++iter) {
         delete *iter;
     } // for
@@ -79,6 +81,7 @@ void WATCardOffice::main() {
         } or _When (!jobs.empty()) _Accept(requestWork) {
             prt.print(Printer::WATCardOffice, 'W');
 
+            // Book keeping
             jobs.pop_front();
         } // _Accept
     } // for
@@ -108,10 +111,12 @@ void WATCardOffice::Courier::main() {
       if (!job) break;
         Args arg = job->args;
 
+        // get money from bank
         prt.print(Printer::Courier, id, 't', arg.sid, arg.amount);
         bank.withdraw(arg.sid, arg.amount);
         prt.print(Printer::Courier, id, 'T', arg.sid, arg.amount);
 
+        // deposit money
         arg.card->deposit(arg.amount);
 
         // 1 in 6 chance of losing a card
@@ -120,6 +125,7 @@ void WATCardOffice::Courier::main() {
         } else {
             job->result.delivery(arg.card);
         } // if
+
         delete job;
     } // for
     prt.print(Printer::Courier, id, 'F');

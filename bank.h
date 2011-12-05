@@ -6,7 +6,7 @@
 
 _Monitor Bank {
 	uCondition *locks; // array of lock, one per student
-	std::vector<unsigned int> balance;
+	std::vector<unsigned int> balance; //Keep track of balance
   public:
     Bank( unsigned int numStudents );
     ~Bank();

@@ -5,8 +5,8 @@
 #include <uFuture.h>
 
 class WATCard {
-	unsigned int balance;
-    WATCard( const WATCard & );			// prevent copying
+	unsigned int balance;					//used to keep track of balance on watcard
+    WATCard( const WATCard & );				// prevent copying
     WATCard &operator=( const WATCard & );
   public:
     WATCard();

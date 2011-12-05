@@ -8,7 +8,7 @@ using namespace std;
 Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ) :
 	numStudents( numStudents ), numVendingMachines ( numVendingMachines ), numCouriers ( numCouriers ) {
 	total = Student + numStudents + numVendingMachines + numCouriers;
-	for ( unsigned int i = 0; i < total; i++ ) {
+	for ( unsigned int i = 0; i < total; i++ ) {				//initialize buffer
 		Buffer buffer;
 		buffer.override = false;
 		buffer.val1 = -1;
@@ -50,40 +50,40 @@ void Printer::flushBuffer (bool finished) {
 			cout << "\t";
 			continue;
 		} //if
-		cout << buffers[i].state;
-		if ( buffers[i].val1 != -1 ) {
+		cout << buffers[i].state;											//print state
+		if ( buffers[i].val1 != -1 ) {										//print value1 if exists
 			cout << ":" << buffers[i].val1;
 			buffers[i].val1 = -1;
 		} //if
-		if ( buffers[i].val2 != -1 ) {
+		if ( buffers[i].val2 != -1 ) {										//print value2 if exists
 			cout << "," << buffers[i].val2;
 			buffers[i].val2 = -1;
 		} //if
 		cout << "\t";
 	} //for
 	cout << endl;
-	for (unsigned int i = 0; i < total; i++) {         					//clear buffer
+	for (unsigned int i = 0; i < total; i++) {         						//clear buffer
 		buffers[i].override = false;
 	} //for
 } //Printer::flushBuffer
 
 void Printer::printHelper ( Kind kind, unsigned int lid, char state, int val1, int val2) {
 
-	int id = getId (kind, lid);
-	if ( buffers[id].override) flushBuffer(false);
+	int id = getId (kind, lid);												//get a unique id by parsing kind and id
+	if ( buffers[id].override) flushBuffer(false);							//flush buffer if override occurred
 
 	buffers[id].override = true;
 	buffers[id].state = state;
 	buffers[id].val1 = val1;
 	buffers[id].val2 = val2;
 
-	if ( state == 'F' ) {
+	if ( state == 'F' ) {													//flush buffer if finished state is reached
 		flushBuffer(true);
-		buffers[id].state = '-';
+		buffers[id].state = '-';											//mark as finished
 	}
 } //Printer::printHelper
 
-int Printer::getId( Kind kind, unsigned int id) {
+int Printer::getId( Kind kind, unsigned int id) {							//calculate a unique id based on the kind and id
 	switch (kind) {
 		case Student: 
 			return Student + id;

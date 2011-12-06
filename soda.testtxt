@@ -48,6 +48,104 @@ VALID COMMAND TESTS
 		Smallest valid seed
 		Random valid seed
 
+ALGORITHM TESTING
+  Note: random number generator is sometime replaced with hardset values to better control the test case
+
+  Piece Wise Test Case 1:  Testing interacting of vending machine, bottling plant, nameServer, truck, truck doesn't wait for plant
+    soda.config file Modification:  Very large parentDelay(10000), very high soda cost(10000), maxStock per flavour = 4, 
+    low TimeBetweenShipment(0), 2 vendingMachines
+    Forced random number generator: plant produce 5 bottles of flavour 0 and 3 bottles of flavour 1-3
+    Ran with ./soda soda.config 1
+
+  Expected Result:
+    First ran for truck,  vendingMachine 0 get 4 bottles of flavour 0, 3 bottles of flavour 1-3,
+      vendingMachine 1 get 1 bottles of flavour 0
+    Second ran for truck, vendingMachine 0 get 1 bottles of flavour 1-3
+      vendingMachine 1 get 3 bottles of flavour 0 and 2 bottles of flavour 1-3
+    Third ran for truck, vendingMachine 1 get 2 bottles of flavour 1-3, truck successfully filled all vendingMachine
+    Fourth ran for truck,  trunk visits all vendingMachine but does nothing because all vendingMachine is full
+
+  Actual Result:
+    Area of interest
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:10000                 
+     5                  R:1     S       S                       S:10000         
+     6                          P:14    G:14    S:1,10                          
+     7                          d:0,14                                          
+     8          C:0,5           U:0,3   P       V:0                             
+     9                  N:0,0   d:1,1   G:14            r               t:0,5   
+    10          W               U:1,15                  R       r               
+    11                          P:14                            R               
+    12                          d:0,14                                          
+    13                          D:0,11  P                                       
+    14                          d:1,11  G:14            r                       
+    15                          U:1,6                   R       r               
+    16                          P:14                            R               
+    17                          d:0,14                                          
+    18                          D:0,14  P                                       
+    19                          d:1,14  G:14            r                       
+    20                          D:1,8                   R       r               
+    21                          P:14                            R               
+    22                          d:0,14                                          
+    23                          D:0,14  P                                       
+    24                          d:1,14  G:14            r                       
+    25                          D:1,14                  R       r               
+
+    Truck is delivering as expected
+  Analysis
+   First ran is line 6-10
+   Second ran is line 11-15
+   Third ran is line 16-20
+   Fourth ran is line 21-25
+
+   Proves that:
+   1. Vending Machine is registering to NameServer correctly
+   2. Truck is getting VendingMachine from Nameserver correctly
+   3. Trunk is picking up cargo from BottlingPlant correctly (BottlingPlant generted 14 = truck picked up 14)
+   3. Truck is delivering to VendingMachne correctly
+   4. Vending Machine is restocking properly
+
+   Piece Wise Test Case 2: Testing interacting of vending machine, bottling plant, nameServer, truck, truck waits for plant
+    soda.config file Modification:  Very large parentDelay(10000), very high soda cost(10000), maxStock per flavour = 4, 
+    high TimeBetweenShipment(100), 2 vendingMachines
+    Forced random number generator: plant produce 5 bottles of flavour 0 and 3 bottles of flavour 1-3
+    Ran with ./soda soda.config 1
+   
+  Expected Result:
+    Same as case 1
+
+  Result:
+     Only the first few lines are shown
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:10000                 
+     5          C:0,5   R:1     S       S       S:1,5           S:10000         
+     6          W       N:0,0   P:14    G:14    V:0                     t:0,5   
+     7                          d:0,14                                          
+     8                          U:0,3   P               r                       
+     9                          d:1,1                                           
+    10                          U:1,15                  R       r               
+    11                          P:14    G:14                    R               
+    12                          d:0,14                                          
+    13                          D:0,11  P               r                       
+    14                          d:1,11                                          
+    15                          U:1,6                   R       r               
+    16                          P:14    G:14                    R               
+    17                          d:0,14                                          
+    18                          D:0,14  P               r                       
+    19                          d:1,14                                          
+    20                          D:1,8                   R       r               
+    21                          P:14    G:14                    R               
+    22                          d:0,14                                          
+    23                          D:0,14  P               r                       
+    24                          d:1,14                                          
+    25                          D:1,14                  R       r               
+  Analysis:
+    Proves that the the interaction between truck and bottling plant is correct even if truck has to wait for generation of soda
+
 Piece Wise Test Case 3:  Testing interacting of parent, bank, student and courier
     soda.config file Modification:  cost higher than initial cost (10 per bottle), 1 student, 1 courier
     Forced random number generator: stop courier from losing watcard
@@ -155,6 +253,60 @@ Piece Wise Test Case 4:  Testing interacting of parent, bank, student and courie
    3. Student can handle losing wat card repeatedly (line 31)
 		line 31, wat card is lost once again after transfer, re-create wat card
 
+  Piece Wise Test Case 5:  Testing interacting of vending machine, student, vending machine have no soda so student busy wait
+    soda.config file Modification:  small parentDelay(10), low soda cost(1), maxStock per flavour = 10, 
+    high TimeBetweenShipment(50), 2 vendingMachines, 1 student, 
+    Forced random number: student favorite flavour is 0 and bottlingPlant generate 1 of flavour each ran, studnet buys 3 times
+    Ran with ./soda soda.config 1
+
+  Expected Result:
+    VendingMachine is not filling up fast enough, so student 1 busy waits between the machines until truck fills it 
+
+  Actual Result:
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:1                     
+     5          C:0,5   R:1     S       S       S:0,3           S:1             
+     6  D:0,1   W       N:0,0                   V:0                     t:0,5   
+     7  D:0,1                                                                   
+     8  D:0,2                                                                   
+     9  D:0,2           N:0,1                   V:1                     T:0,5   
+    10  D:0,1           N:0,0   P:10    G:14    V:0                             
+    11                          d:0,10                                          
+    12                          U:0,30  P               r                       
+    13  D:0,3                                   B:4     R                       
+    14                  N:0,1                   V:1     B:0,0                   
+    15  D:0,2           N:0,0                   V:0                             
+    16  D:0,1           N:0,1                   V:1                             
+    17                  N:0,0                   V:0                             
+    18  D:0,1           N:0,1                   V:1                             
+    19  D:0,1           N:0,0                   V:0                             
+    20                  N:0,1   P:10    G:14    V:1                             
+    21                          d:0,10                                          
+    22  D:0,3                   U:0,21  P               r                       
+    23                  N:0,0                   V:0     R                       
+    24  D:0,3                                   B:3     B:0,0                   
+    25                  N:0,1                   V:1                             
+    26                  N:0,0                   V:0                             
+    27  D:0,1           N:0,1                   V:1                             
+    28                  N:0,0                   V:0                             
+    29  D:0,2           N:0,1                   V:1                             
+    30                  N:0,0                   V:0                             
+    31  D:0,3           N:0,1                   V:1                             
+    32                  N:0,0                   V:0                             
+    33                  N:0,1   P:10    G:14    V:1                             
+    34                          d:0,10                                          
+    35  D:0,2                   U:0,12  P               r                       
+    36  D:0,3           N:0,0                   V:0     R                       
+    37                                          B:2                             
+    38  ...     ...     ...     ...     ...     F       ...     ...     ...     
+
+  Analysis
+
+   Proves that:
+    1. Student obtain a new vending machine from nameServer properly when vendingmachine is out of stock
+    2. NameServer is circulating the machines correctly
 
 Piece Wise Test Case 6:  Testing interacting of all components with normal parameters
     soda.config file Modification:  2 student, 2 vending machines, 2 courier, $10 per bottle

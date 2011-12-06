@@ -1,0 +1,332 @@
+INVALID COMMAND TESTS
+---------------------
+	TEST DESCRIPTION:
+		Make sure the program can handle all invalid inputs.
+
+	TEST:
+	1	./soda non-existent-file.config
+	2	Error: could not open input file "non-existent-file.config"
+	3	./soda soda.config -234
+	4	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+	5	./soda soda.config 0
+	6	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+	7	./soda soda.config abc
+	8	Usage: ./soda [ config-file [ random-seed (> 0) ] ]
+
+	ANALYSIS:
+	The test results show that the program correctly displayed error messages for the following invalid inputs.
+		Non existent config file
+		Invalid seed (negative number, zero, not a number)
+	*The values in the soda.config file is assumed to be correct.
+
+VALID COMMAND TESTS
+-------------------
+	TEST DESCRIPTION:
+		Make sure the program will run to completion for all valid inputs
+	
+	TEST: (The actual outputs of the program is not of concern for this test, therefore it's ommitted from the results)
+	1	./soda 
+	...
+	356	************************
+	
+	357 ./soda soda-test.config
+	...
+	986 ************************
+	
+	987	./soda soda-test.config 1
+	...
+   1578 ************************
+
+   1579 ./soda soda-test.config 23421
+	...
+   2743 ************************
+
+	ANALYSIS:
+	The test results show that the program ran to completion for the following cases of valid inputs:
+		No parameters, (used the default soda.config file)
+		A config file with a different name
+		Smallest valid seed
+		Random valid seed
+
+Piece Wise Test Case 3:  Testing interacting of parent, bank, student and courier
+    soda.config file Modification:  cost higher than initial cost (10 per bottle), 1 student, 1 courier
+    Forced random number generator: stop courier from losing watcard
+    Ran with ./soda soda.config
+
+  Expected Result:
+	Student will first create a card. Depending on if there is enough money in the bank, the student
+		might have to wait for the transfer of money.
+    When the student first try to buy a bottle, the it will not have enough money. 
+		So it need to transfer $15 from the bank into his watcard.
+	The parent will need to make a few deposits into bank since the parent can only deposit $1-3 each time.
+	When there is enough money, the courier will transfer the money.
+
+
+  Actual Result:
+    Area of interest
+     1	Parent	WATOff	Names	Truck	Plant	Stud:0	Mach:0	Cour:0	
+     2	*******	*******	*******	*******	*******	*******	*******	*******	
+     3	S		S		S										S	
+     4			C:0,5	R:0		S		S		S:0,6	S:10		
+     5	D:0,2	W		N:0,0					V:0				t:0,5	
+     6	D:0,2					P:14	G:14				
+     7							d:0,14					
+     8	D:0,2					U:0,26	P				r		T:0,5	
+     9	D:0,1	T:0,15									R		t:0,15	
+    10	D:0,3	W				P:29	G:29				
+    11							d:0,29					
+    12							U:0,7	P				r		
+    13	D:0,2											R		
+    14	D:0,3					P:33	G:33				
+    15							d:0,33					
+    16	D:0,3					D:0,26	P				r		
+    17	D:0,2									B:10	R		T:0,15	
+
+  Analysis
+   Proves that:
+   1. Student creates a watcard with a value of $5 when it starts (line 4)
+   2. Courior attempt to withdraw money, but block if there is not enough funds (line 5 - 8)
+		At line 5, there is $2 in the bank (not enough), and courier blocked
+		At line 8, there is $6 in the bank (enough), and courier unblocked
+   3. Student will transfer money if there is not enough to buy drink (line 9)
+		One bottle costs $10, student only have $5 in watcard
+   4. Student will receive transfer of (cost + $5) and buy drink when there is enough funds (line 9 - 17)
+		At line 9, student requests to transfer $15
+		At line 16, (2 + 2 + 2) - 5 + 1 + 3 + 2 + 3 + 3	= $13 (not enough)	
+		At line 17, $13 + $2 = $15 (enough), courier is unblocked, student bought drink
+
+
+Piece Wise Test Case 4:  Testing interacting of parent, bank, student and courier when card is lost
+    soda.config file Modification:  same as previous
+    Forced random number generator: set lose card rate to 1/2
+    Ran with ./soda soda.config
+
+  Expected Result:
+	Same as Piece Wise Test Case 3.
+	When Card lost: student lose all money and create new card
+
+  Actual Result:
+    Area of interest
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Cour:0
+     2  ******* ******* ******* ******* ******* ******* ******* *******
+     3  S       S       S                                       S
+     4          C:0,5   R:0     S       S       S:1,7   S:10
+     5  D:0,1   W       N:0,0                   V:0             t:0,5
+     6  D:0,1                   P:20    G:20
+     7                          d:0,20
+     8  D:0,2                   U:0,20  P               r
+     9  D:0,2   T:0,15                  G:19            R       T:0,5
+    10  D:0,1                   P:19
+    11                          d:0,19
+    12          W               U:0,8   P               r       t:0,15
+    13  D:0,2                                           R
+    14  D:0,2                   P:22    G:22
+    15                          d:0,22
+    16  D:0,1                   U:0,3   P               r
+    17  D:0,2                   P:15    G:15            R
+    18                          d:0,15
+    19  D:0,3                   D:0,12  P               r
+    20  D:0,3   C:0,5                           L       R       T:0,15
+    21  D:0,1                   P:22    G:22                    t:0,5
+    22                          d:0,22
+    23          W               D:0,22  P               r
+    24  D:0,3                                           R
+    25  D:0,1                   P:24    G:24    L               T:0,5
+    26                          d:0,24
+    27  D:0,2   C:0,5           D:0,24  P               r       t:0,5
+    28  D:0,1   W               P:22    G:22            R
+    29                          d:0,22
+    30  D:0,1                   D:0,22  P               r
+    31  D:0,1   C:0,5                           L       R       T:0,5
+    32  D:0,2                   P:8     G:8                     t:0,5
+    33                          d:0,8
+    34          W               D:0,8   P               r
+    35  D:0,1                                           R
+    36  D:0,2                   P:21    G:21                    T:0,5
+
+
+  Analysis
+   Proves that:
+   1. Student creates new watCard immediately after card is lost (line 20)
+		line 20, card lost, new card create through wat card office
+   2. Student can handle losing card dur re-creation (line 25 - 27)
+		line 25, card lost after money is transfered from creation of new wat card
+		line 27, create new wat card again
+   3. Student can handle losing wat card repeatedly (line 31)
+		line 31, wat card is lost once again after transfer, re-create wat card
+
+
+Piece Wise Test Case 6:  Testing interacting of all components with normal parameters
+    soda.config file Modification:  2 student, 2 vending machines, 2 courier, $10 per bottle
+    Forced random number generator: none
+    Ran with ./soda soda.config
+
+  Expected Result:
+	Student will terminate after buying the set number of purchases.
+	Plant will generate a random number of flavours each round.
+	Trunk will pick up and deliver shipment to the vending machines in order.
+	Parent will donate between $1-3 for to each of the students randomly.
+	Courier will block when there is not enough funds.
+
+  Actual Result:
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Stud:1  Mach:0  Mach:1  Cour:0  Cour:1
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+     3  S       S       S                                                       S       S
+     4                  R:0                                     S:10
+     5          C:0,5   R:1     S       S       S:0,1   S:3,1           S:10
+     6          C:1,5   N:0,0                   V:0     V:1                     t:0,5
+     7          W       N:1,1                                                           t:1,5
+     8  D:1,1   W
+     9  D:0,1                   P:13    G:13
+    10                          d:0,13
+    11                          U:0,27  P                       r
+    12  D:1,2                                                   R
+    13  D:0,3
+    14  D:0,3   C:0,5                           L                               T:0,5
+    15          W               P:25    G:25                                    t:0,5
+    16                          d:0,25
+    17                          U:0,6   P                       r
+    18                          d:1,4
+    19                          U:1,36                          R       r
+    20  D:1,1                                                           R
+    21  D:1,2   C:1,5                                   L                               T:1,5
+    22          W               P:25    G:25                                            t:1,5
+    23                          d:0,25
+    24  D:0,3                   D:0,19  P                       r               T:0,5
+    25                          d:1,19
+    26          T:0,15          U:1,19                          R       r
+    27  D:1,2   W                                                       R       t:0,15
+    28  D:0,1                   P:24    G:24
+    29                          d:0,24
+    30                          D:0,24  P                       r
+    31                          d:1,24
+    32                          U:1,11                          R       r
+    33  D:1,2   C:1,5                                   L               R               T:1,5
+    34  D:0,1   W                                                                       t:1,5
+    35  D:1,2                   P:19    G:19
+    36                          d:0,19
+    37                          D:0,19  P                       r
+    38                          d:1,19
+    39                          U:1,7                           R       r
+    40  D:0,1                                                           R
+    41  D:1,2                   P:22    G:22
+    42                          d:0,22
+    43                          D:0,22  P                       r
+    44                          d:1,22
+    45  D:0,1                   U:1,2                           R       r
+    46  D:1,2   T:1,15                                                  R               T:1,5
+    47  D:0,3   W               P:21    G:21                                            t:1,15
+    48                          d:0,21
+    49                          D:0,21  P                       r
+    50                          d:1,21
+    51                          U:1,1                           R       r
+    52  D:1,1                                                           R
+    53  D:0,1                   P:21    G:21
+    54                          d:0,21
+    55  D:0,3                   D:0,21  P                       r
+    56                          d:1,21
+    57                          D:1,20                          R       r
+    58  D:0,1                                                           R
+    59  D:0,1                   P:23    G:23
+    60                          d:0,23
+    61                          D:0,23  P                       r
+    62                          d:1,23
+    63                          D:1,23                          R       r
+    64  D:0,3                                   B:10                    R       T:0,15
+    65  ...     ...     ...     ...     ...     F       ...     ...     ...     ...     ...
+    66  D:0,3                                                   B:0,9
+    67  D:1,1                   P:16    G:16
+    68                          d:0,16
+    69                          D:0,15  P                       r
+    70                          d:1,15
+    71                          D:1,15                          R       r
+    72  D:0,2                                                           R
+    73  D:1,3                   P:15    G:15
+    74                          d:0,15
+    75                          D:0,15  P                       r
+    76                          d:1,15
+    77  D:0,1                   D:1,15                          R       r
+    78  D:1,1                                                           R
+    79  D:0,2                   P:14    G:14
+    80                          d:0,14
+    81                          D:0,14  P                       r
+    82                          d:1,14
+    83                          D:1,14                          R       r
+    84  D:1,1                                                           R
+    85  D:0,2                   P:15    G:15
+    86                          d:0,15
+    87  D:0,2                   D:0,15  P                       r
+    88                          d:1,15
+    89                          D:1,15                          R       r
+    90  D:0,3                                                           R
+    91  D:0,2                   P:18    G:18
+    92                          d:0,18
+    93                          D:0,18  P                       r
+    94                          d:1,18
+    95                          D:1,18                          R       r
+    96  D:1,2                                                           R
+    97  D:1,1
+    98  D:0,1                   P:27    G:27
+    99                          d:0,27
+   100                          D:0,27  P                       r
+   101                          d:1,27
+   102                          D:1,27                          R       r
+   103  D:1,2                                                           R
+   104  D:0,2                   P:21    G:21
+   105                          d:0,21
+   106                          D:0,21  P                       r
+   107                          d:1,21
+   108  D:0,3                   D:1,21                          R       r
+   109  D:0,3                                                           R
+   110  D:0,3                   P:26    G:26
+   111                          d:0,26
+   112                          D:0,26  P                       r
+   113                          d:1,26
+   114                          D:1,26                          R       r
+   115  D:0,2                                                           R
+   116  D:0,2                   P:25    G:25
+   117                          d:0,25
+   118  D:0,1                   D:0,25  P                       r
+   119                          d:1,25
+   120                          D:1,25                          R       r
+   121  D:0,3                                                           R
+   122  D:0,2                   P:22    G:22
+   123                          d:0,22
+   124                          D:0,22  P                       r
+   125                          d:1,22
+   126                          D:1,22                          R       r
+   127  D:1,3                                           B:10            R               T:1,15
+   128  ...     ...     ...     ...     ...     ...     F       ...     ...     ...     ...
+   129  D:0,2                                                           B:3,9
+   130  D:0,1                           G:16
+   131  ...     ...     ...     ...     F       ...     ...     ...     ...     ...     ...
+   132  ...     ...     ...     F       ...     ...     ...     ...     ...     ...     ...
+   133  ...     ...     ...     ...     ...     ...     ...     F       ...     ...     ...
+   134  ...     ...     ...     ...     ...     ...     ...     ...     F       ...     ...
+   135  ...     ...     F       ...     ...     ...     ...     ...     ...     ...     ...
+   136  ...     F       ...     ...     ...     ...     ...     ...     ...     ...     ...
+   137  ...     ...     ...     ...     ...     ...     ...     ...     ...     F       ...
+   138  ...     ...     ...     ...     ...     ...     ...     ...     ...     ...     F
+   139  D:0,1
+   140  F       ...     ...     ...     ...     ...     ...     ...     ...     ...     ...
+   141  ***********************
+   
+  Analysis
+   Proves that:
+   1. Student will terminate after buying the set number of purchases (line 5 - 65)
+		line 5, student 0 decided to make a total of one purchas
+		line 64, student 0 bought a bottle
+		line 65, student 0 finished
+   2. Plant will generate a random number of flavours each round
+   3. Trunk will pick up and deliver shipment to the vending machines in order (line 15 - 19)
+		line 15, bottling plant generate 15 bottles, truck picked up 15 bottles
+		line 16, deliver bottles to vending machine 0
+		line 18, deliver bottles to vending machine 0
+   4. Parent will donate between $1-3 for to each of the students randomly 
+   5. Courier will block when there is not enough funds (line 6 - 14)
+		line 6, courier attempts to transfer $5 from bank to student 0 ($0 in bank, not enough, blocks)
+		line 9, deposit $1 to student 0, total $1 in bank, (not enough)
+		line 13, deposit $3 to student 0, total $4 in bank, (not enough)
+		line 14, deposit $3 to student 0, total $7 in bank, (enough funds), courier unblock, fund transfered 
+   6. Program successfully runs to completion without any deadlocks or memory leaks.
+

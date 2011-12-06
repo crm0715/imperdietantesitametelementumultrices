@@ -8,11 +8,11 @@ ALGORITHM TESTING
     Ran with ./soda soda.config 1
 
   Expected Result:
-    First ran for truck,  vendingMachine 1 get 4 bottles of flavour 0, 3 bottles of flavour 1-3,
-      vendingMachine 2 get 1 bottles of flavour 0
-    Second ran for truck, vendingMachine 1 get 1 bottles of flavour 1-3
-      vendingMachine 2 get 3 bottles of flavour 0 and 2 bottles of flavour 1-3
-    Third ran for truck, vendingMachine 2 get 2 bottles of flavour 1-3, truck successfully filled all vendingMachine
+    First ran for truck,  vendingMachine 0 get 4 bottles of flavour 0, 3 bottles of flavour 1-3,
+      vendingMachine 1 get 1 bottles of flavour 0
+    Second ran for truck, vendingMachine 0 get 1 bottles of flavour 1-3
+      vendingMachine 1 get 3 bottles of flavour 0 and 2 bottles of flavour 1-3
+    Third ran for truck, vendingMachine 1 get 2 bottles of flavour 1-3, truck successfully filled all vendingMachine
     Fourth ran for truck,  trunk visits all vendingMachine but does nothing because all vendingMachine is full
 
   Actual Result:
@@ -43,14 +43,55 @@ ALGORITHM TESTING
     24                          d:1,14  G:14            r                       
     25                          D:1,14                  R       r               
 
+    Truck is delivering as expected
   Analysis
+   First ran is line 6-10
+   Second ran is line 11-15
+   Third ran is line 16-20
+   Fourth ran is line 21-25
+
    Proves that:
    1. Vending Machine is registering to NameServer correctly
-   2. 
+   2. Truck is getting VendingMachine from Nameserver correctly
+   3. Trunk is picking up cargo from BottlingPlant correctly (BottlingPlant generted 14 = truck picked up 14)
+   3. Truck is delivering to VendingMachne correctly
+   4. Vending Machine is restocking properly
 
+   Piece Wise Test Case 2: Testing interacting of vending machine, bottling plant, nameServer, truck, truck waits for plant
+    soda.config file Modification:  Very large parentDelay(10000), very high soda cost(10000), maxStock per flavour = 4, 
+    high TimeBetweenShipment(100), 2 vendingMachines
+    Forced random number generator: plant produce 5 bottles of flavour 0 and 3 bottles of flavour 1-3
+    Ran with ./soda soda.config 1
+   
+  Expected Result:
+    Same as case 1
 
-    
-
-
-
+  Result:
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:10000                 
+     5          C:0,5   R:1     S       S       S:1,5           S:10000         
+     6          W       N:0,0   P:14    G:14    V:0                     t:0,5   
+     7                          d:0,14                                          
+     8                          U:0,3   P               r                       
+     9                          d:1,1                                           
+    10                          U:1,15                  R       r               
+    11                          P:14    G:14                    R               
+    12                          d:0,14                                          
+    13                          D:0,11  P               r                       
+    14                          d:1,11                                          
+    15                          U:1,6                   R       r               
+    16                          P:14    G:14                    R               
+    17                          d:0,14                                          
+    18                          D:0,14  P               r                       
+    19                          d:1,14                                          
+    20                          D:1,8                   R       r               
+    21                          P:14    G:14                    R               
+    22                          d:0,14                                          
+    23                          D:0,14  P               r                       
+    24                          d:1,14                                          
+    25                          D:1,14                  R       r               
+  Analysis:
+    Proves that the the interaction between truck and bottling plant is correct even if truck has to wait for generation of soda
 

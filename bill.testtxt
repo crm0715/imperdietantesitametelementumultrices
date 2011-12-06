@@ -67,6 +67,7 @@ ALGORITHM TESTING
     Same as case 1
 
   Result:
+     Only the first few lines are shown
      1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
      2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
      3  S       S       S                                               S       
@@ -95,3 +96,57 @@ ALGORITHM TESTING
   Analysis:
     Proves that the the interaction between truck and bottling plant is correct even if truck has to wait for generation of soda
 
+  Piece Wise Test Case 5:  Testing interacting of vending machine, student, vending machine have no soda so student busy wait
+    soda.config file Modification:  small parentDelay(10), low soda cost(1), maxStock per flavour = 10, 
+    high TimeBetweenShipment(50), 2 vendingMachines, 1 student, 
+    Forced random number: student favorite flavour is 0 and bottlingPlant generate 1 of flavour each ran, studnet buys 3 times
+    Ran with ./soda soda.config 1
+
+  Expected Result:
+    VendingMachine is not filling up fast enough, so student 1 busy waits between the machines until truck fills it 
+
+  Actual Result:
+     1  Parent  WATOff  Names   Truck   Plant   Stud:0  Mach:0  Mach:1  Cour:0  
+     2  ******* ******* ******* ******* ******* ******* ******* ******* ******* 
+     3  S       S       S                                               S       
+     4                  R:0                             S:1                     
+     5          C:0,5   R:1     S       S       S:0,3           S:1             
+     6  D:0,1   W       N:0,0                   V:0                     t:0,5   
+     7  D:0,1                                                                   
+     8  D:0,2                                                                   
+     9  D:0,2           N:0,1                   V:1                     T:0,5   
+    10  D:0,1           N:0,0   P:10    G:14    V:0                             
+    11                          d:0,10                                          
+    12                          U:0,30  P               r                       
+    13  D:0,3                                   B:4     R                       
+    14                  N:0,1                   V:1     B:0,0                   
+    15  D:0,2           N:0,0                   V:0                             
+    16  D:0,1           N:0,1                   V:1                             
+    17                  N:0,0                   V:0                             
+    18  D:0,1           N:0,1                   V:1                             
+    19  D:0,1           N:0,0                   V:0                             
+    20                  N:0,1   P:10    G:14    V:1                             
+    21                          d:0,10                                          
+    22  D:0,3                   U:0,21  P               r                       
+    23                  N:0,0                   V:0     R                       
+    24  D:0,3                                   B:3     B:0,0                   
+    25                  N:0,1                   V:1                             
+    26                  N:0,0                   V:0                             
+    27  D:0,1           N:0,1                   V:1                             
+    28                  N:0,0                   V:0                             
+    29  D:0,2           N:0,1                   V:1                             
+    30                  N:0,0                   V:0                             
+    31  D:0,3           N:0,1                   V:1                             
+    32                  N:0,0                   V:0                             
+    33                  N:0,1   P:10    G:14    V:1                             
+    34                          d:0,10                                          
+    35  D:0,2                   U:0,12  P               r                       
+    36  D:0,3           N:0,0                   V:0     R                       
+    37                                          B:2                             
+    38  ...     ...     ...     ...     ...     F       ...     ...     ...     
+
+  Analysis
+
+   Proves that:
+    1. Student obtain a new vending machine from nameServer properly when vendingmachine is out of stock
+    2. NameServer is circulating the machines correctly
